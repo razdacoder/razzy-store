@@ -8,6 +8,13 @@
       "when": 1724881581870,
       "tag": "0000_long_moonstone",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1724882599651,
+      "tag": "0001_plain_franklin_storm",
+      "breakpoints": true
     }
   ]
 }
