@@ -2,8 +2,8 @@
 import Image from "next/image";
 export default function ImageCarousel() {
   return (
-    <div className="flex gap-4 flex-col-reverse md:flex-row">
-      <div className="flex flex-row md:flex-col gap-4">
+    <div className="flex gap-4 flex-col-reverse lg:flex-row">
+      <div className="flex flex-row lg:flex-col lg:flex-wrap gap-4">
         <Image
           src="/img1.jpg"
           alt="Product Image"

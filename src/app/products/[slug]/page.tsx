@@ -27,7 +27,7 @@ export default function ProductPage() {
           <div>
             <ImageCarousel />
           </div>
-          <div className="py-4 w-full md:w-3/4">
+          <div className="py-4 w-full lg:w-3/4">
             <Breadcrumb className="hidden md:block">
               <BreadcrumbList>
                 <BreadcrumbItem>
