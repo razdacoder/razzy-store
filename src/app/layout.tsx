@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import SheetProvider from "@/components/sheet-provider";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import {
@@ -42,6 +43,7 @@ export default function RootLayout({
       >
         <Header />
         {children}
+        <SheetProvider />
       </body>
     </html>
   );
