@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import ReactQueryProvider from "@/components/query-provider";
 import SheetProvider from "@/components/sheet-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
@@ -45,19 +46,21 @@ export default function RootLayout({
           fontSerif.variable
         )}
       >
-        <Header />
-        <NextSSRPlugin
-          /**
-           * The `extractRouterConfig` will extract **only** the route configs
-           * from the router to prevent additional information from being
-           * leaked to the client. The data passed to the client is the same
-           * as if you were to fetch `/api/uploadthing` directly.
-           */
-          routerConfig={extractRouterConfig(ourFileRouter)}
-        />
-        {children}
-        <Toaster richColors />
-        <SheetProvider />
+        <ReactQueryProvider>
+          <Header />
+          <NextSSRPlugin
+            /**
+             * The `extractRouterConfig` will extract **only** the route configs
+             * from the router to prevent additional information from being
+             * leaked to the client. The data passed to the client is the same
+             * as if you were to fetch `/api/uploadthing` directly.
+             */
+            routerConfig={extractRouterConfig(ourFileRouter)}
+          />
+          {children}
+          <Toaster richColors />
+          <SheetProvider />
+        </ReactQueryProvider>
       </body>
     </html>
   );
