@@ -83,7 +83,4 @@ const config = {
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 
-export default withUt({
-  config,
-  content: ["./src/**/*.{ts,tsx,mdx}"],
-});
+export default withUt(config);
