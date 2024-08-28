@@ -1,5 +1,6 @@
 import Header from "@/components/header";
 import SheetProvider from "@/components/sheet-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import type { Metadata } from "next";
@@ -55,6 +56,7 @@ export default function RootLayout({
           routerConfig={extractRouterConfig(ourFileRouter)}
         />
         {children}
+        <Toaster richColors />
         <SheetProvider />
       </body>
     </html>

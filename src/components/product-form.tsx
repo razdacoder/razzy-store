@@ -9,6 +9,10 @@ import { categories } from "@/lib/config";
 import { productScheme, ProductValues } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+
+import { UploadDropzone } from "@/lib/uploadthing";
+import { toast } from "sonner";
+import { Button } from "./ui/button";
 import {
   Form,
   FormControl,
@@ -100,6 +104,26 @@ export default function ProductForm() {
             </FormItem>
           )}
         />
+        <UploadDropzone
+          className="border-2 border-dashed border-secondary text-primary ut-button:ut-readying:bg-primary/80 ut-button:ut-ready:bg-primary ut-label:text-primary"
+          endpoint="imageUploader"
+          onUploadBegin={() => {
+            toast.loading("Uploading files...");
+          }}
+          onClientUploadComplete={(res) => {
+            toast.dismiss();
+            toast.success("Upload Completed");
+            const images = res.map((r) => r.url);
+            form.setValue("images", images);
+          }}
+          onUploadError={(error: Error) => {
+            // Do something with the error.
+            toast.dismiss();
+            toast.error(`ERROR! ${error.message}`);
+          }}
+        />
+
+        <Button className="w-full">Create Product</Button>
       </form>
     </Form>
   );
