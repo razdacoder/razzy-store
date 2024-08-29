@@ -12,7 +12,7 @@ export default function ProductCard({ product }: Props) {
     <Link href={`/products/gfdggf`}>
       <div className="relative h-[480px]">
         <Image
-          src={product.images[0]}
+          src={product.images[1]}
           alt={product.title}
           fill
           className="absolute object-cover"
