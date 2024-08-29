@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 export default function useCreateProduct() {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (values: ProductValues) => createProduct(values),
     onSuccess: () => {
       toast.success("Product Created");
@@ -15,5 +15,5 @@ export default function useCreateProduct() {
       toast.error("Something went wrong!!");
     },
   });
-  return { mutate };
+  return { mutate, isPending };
 }

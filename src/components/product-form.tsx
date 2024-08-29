@@ -10,7 +10,9 @@ import { productScheme, ProductValues } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import useCreateProduct from "@/hooks/use-create-product";
 import { UploadDropzone } from "@/lib/uploadthing";
+import { Loader } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import {
@@ -35,9 +37,15 @@ export default function ProductForm() {
       price: 0,
     },
   });
+
+  const { mutate, isPending } = useCreateProduct();
+
+  function onSubmit(values: ProductValues) {
+    mutate(values);
+  }
   return (
     <Form {...form}>
-      <form className="space-y-6 mt-4">
+      <form className="space-y-6 mt-4" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           name="title"
           control={form.control}
@@ -45,7 +53,7 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input disabled={isPending} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -57,7 +65,11 @@ export default function ProductForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                disabled={isPending}
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a category" />
@@ -85,7 +97,7 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Price</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input disabled={isPending} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -98,7 +110,7 @@ export default function ProductForm() {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea disabled={isPending} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -107,6 +119,7 @@ export default function ProductForm() {
         <UploadDropzone
           className="border-2 border-dashed border-secondary text-primary ut-button:ut-readying:bg-primary/80 ut-button:ut-ready:bg-primary ut-label:text-primary"
           endpoint="imageUploader"
+          disabled={isPending}
           onUploadBegin={() => {
             toast.loading("Uploading files...");
           }}
@@ -123,7 +136,9 @@ export default function ProductForm() {
           }}
         />
 
-        <Button className="w-full">Create Product</Button>
+        <Button className="w-full flex items-center gap-2">
+          {isPending && <Loader className="size-4" />}Create Product
+        </Button>
       </form>
     </Form>
   );
