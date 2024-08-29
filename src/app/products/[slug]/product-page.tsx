@@ -41,98 +41,100 @@ export default function ProductPageClient({ slug }: { slug: string }) {
       <p className="text-sm font-medium">Product not found</p>
     </div>;
   }
-  return (
-    <div className=" grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-      <div>
-        <ImageCarousel images={data?.images as string[]} />
-      </div>
-      <div className="py-4 w-full lg:w-3/4">
-        <Breadcrumb className="hidden md:block">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                href={`/?category=${data?.category}`}
-                className="capitalize"
-              >
-                {data?.category}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{data?.title}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
 
-        <div className="my-8 space-y-4">
-          <h2 className="text-3xl font-semibold">{data?.title}</h2>
-          <h5 className="text-lg font-medium">
-            {formatToNaira(data?.price as number)}
-          </h5>
+  if (data)
+    return (
+      <div className=" grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+        <div>
+          <ImageCarousel images={data.images} />
         </div>
+        <div className="py-4 w-full lg:w-3/4">
+          <Breadcrumb className="hidden md:block">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink
+                  href={`/?category=${data.category}`}
+                  className="capitalize"
+                >
+                  {data?.category}
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{data.title}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
 
-        <div className="my-8">
-          <SizeGuides />
-        </div>
-        <div className="my-8 border-b border-black pb-8">
-          <div className="grid grid-cols-2 my-4">
-            <div className="space-y-4">
-              <div className="flex gap-2 items-center">
-                <ShoppingBag className="size-4" />
-                <span className="text-xs font-medium">
-                  Free delivery to store
-                </span>
+          <div className="my-8 space-y-4">
+            <h2 className="text-3xl font-semibold">{data.title}</h2>
+            <h5 className="text-lg font-medium">{formatToNaira(data.price)}</h5>
+          </div>
+
+          <div className="my-8">
+            <SizeGuides />
+          </div>
+          <div className="my-8 border-b border-black pb-8">
+            <div className="grid grid-cols-2 my-4">
+              <div className="space-y-4">
+                <div className="flex gap-2 items-center">
+                  <ShoppingBag className="size-4" />
+                  <span className="text-xs font-medium">
+                    Free delivery to store
+                  </span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Store className="size-4" />
+                  <span className="text-xs font-medium">
+                    Store availability
+                  </span>
+                </div>
               </div>
-              <div className="flex gap-2 items-center">
-                <Store className="size-4" />
-                <span className="text-xs font-medium">Store availability</span>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex gap-2 items-center">
-                <LogIn className="size-4" />
-                <span className="text-xs font-medium">
-                  Returns within 30 days
-                </span>
-              </div>
-              <div className="flex gap-2 items-center">
-                <Shield className="size-4" />
-                <span className="text-xs font-medium">Secure payment</span>
+              <div className="space-y-4">
+                <div className="flex gap-2 items-center">
+                  <LogIn className="size-4" />
+                  <span className="text-xs font-medium">
+                    Returns within 30 days
+                  </span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <Shield className="size-4" />
+                  <span className="text-xs font-medium">Secure payment</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="space-y-3">
-          <h6 className="font-medium">DESCRIPTION</h6>
-          <p className="text-sm leading-6 font-medium text-muted-foreground">
-            {data?.description}
-          </p>
-        </div>
-        <div className="my-8 flex items-center gap-4">
-          <Button variant="outline" className="flex items-center gap-2">
-            <Edit className="size-4" />
-            Edit Product
-          </Button>
-          <Button
-            onClick={() => deleteProductFn(data?.id as string)}
-            variant="destructive"
-            className="flex items-center gap-2"
-          >
-            {isPending ? (
-              <Loader className="size-4 animate-spin" />
-            ) : (
-              <>
-                <Trash className="size-4" />
-                Delete Product
-              </>
-            )}
-          </Button>
+          <div className="space-y-3">
+            <h6 className="font-medium">DESCRIPTION</h6>
+            <p className="text-sm font-medium text-muted-foreground text-pretty text-justify">
+              {data.description}
+            </p>
+          </div>
+          <div className="my-8 flex items-center gap-4">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Edit className="size-4" />
+              Edit Product
+            </Button>
+            <Button
+              onClick={() => deleteProductFn(data.id)}
+              variant="destructive"
+              className="flex items-center gap-2"
+            >
+              {isPending ? (
+                <Loader className="size-4 animate-spin" />
+              ) : (
+                <>
+                  <Trash className="size-4" />
+                  Delete Product
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 }
