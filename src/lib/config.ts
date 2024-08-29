@@ -1,7 +1,7 @@
 export const categories: readonly [string, ...string[]] = [
-  "Suits",
-  "Agbada",
-  "Kaftan",
+  "suits",
+  "agbada",
+  "kaftan",
 ];
 
 export const sizes = ["XS", "XS/S", "S/M", "S", "M", "L", "XL"];

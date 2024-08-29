@@ -1,13 +1,22 @@
-import { sql } from "drizzle-orm";
-import { real, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { categories } from "@/lib/config";
+import {
+  pgEnum,
+  pgTable,
+  real,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 
-export const products = sqliteTable("products", {
-  id: text("id").primaryKey().notNull(),
+export const categoryEnum = pgEnum("categories", categories);
+
+export const products = pgTable("products", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
   title: text("title").notNull(),
   slug: text("slug").notNull().unique(),
   price: real("price").notNull(),
   description: text("description").notNull(),
-  category: text("category").notNull(),
-  images: text("images").notNull(),
-  createdAt: text("created_at").default(sql`(CURRENT_TIMESTAMP)`),
+  category: categoryEnum("category"),
+  images: text("images").array().notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
 });
