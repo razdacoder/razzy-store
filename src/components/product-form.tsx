@@ -11,9 +11,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import useCreateProduct from "@/hooks/use-create-product";
-import { UploadDropzone } from "@/lib/uploadthing";
-import { Loader } from "lucide-react";
-import { toast } from "sonner";
+import { useNewProduct } from "@/hooks/use-new-product";
+import { uploadFiles } from "@/lib/uploadthing";
+import { Loader, Upload } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { Button } from "./ui/button";
 import {
   Form,
@@ -24,9 +27,14 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 
 export default function ProductForm() {
+  const [files, setFiles] = useState<File[]>([]);
+  const [isPending, startTransition] = useTransition();
+  const { onClose } = useNewProduct();
+  const router = useRouter();
   const form = useForm<ProductValues>({
     resolver: zodResolver(productScheme),
     defaultValues: {
@@ -38,10 +46,28 @@ export default function ProductForm() {
     },
   });
 
-  const { mutate, isPending } = useCreateProduct();
+  const { mutate } = useCreateProduct();
 
   function onSubmit(values: ProductValues) {
-    mutate(values);
+    startTransition(async () => {
+      if (files.length > 0) {
+        const res = await uploadFiles("imageUploader", {
+          files,
+        });
+        const images = res.map((r) => r.url);
+        mutate(
+          { ...values, images: images },
+          {
+            onSuccess: () => {
+              onClose();
+              form.reset();
+              setFiles([]);
+              router.push("/");
+            },
+          }
+        );
+      }
+    });
   }
   return (
     <Form {...form}>
@@ -116,7 +142,46 @@ export default function ProductForm() {
             </FormItem>
           )}
         />
-        <UploadDropzone
+        <div className="space-y-2">
+          <Label>Images</Label>
+          <div className="grid grid-cols-3 gap-2">
+            {files.map((file) => {
+              const imageUrl = URL.createObjectURL(file);
+              return (
+                <Image
+                  key={file.name}
+                  src={imageUrl}
+                  alt="Upload File"
+                  className="aspect-square w-full rounded-md object-cover"
+                  height="300"
+                  width="300"
+                />
+              );
+            })}
+            {files.length < 3 && (
+              <div>
+                <input
+                  className="hidden"
+                  onChange={(e) =>
+                    setFiles((files) => [...files, e.target.files![0]])
+                  }
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                />
+                <label
+                  htmlFor="image"
+                  className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer"
+                >
+                  <Upload className="h-4 w-4 text-muted-foreground" />
+                  <span className="sr-only">Upload</span>
+                </label>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* <UploadButton
           className="border-2 border-dashed border-secondary text-primary ut-button:ut-readying:bg-primary/80 ut-button:ut-ready:bg-primary ut-label:text-primary"
           endpoint="imageUploader"
           disabled={isPending}
@@ -134,10 +199,11 @@ export default function ProductForm() {
             toast.dismiss();
             toast.error(`ERROR! ${error.message}`);
           }}
-        />
+        /> */}
 
         <Button className="w-full flex items-center gap-2">
-          {isPending && <Loader className="size-4" />}Create Product
+          {isPending && <Loader className="size-4 animate-spin" />}Create
+          Product
         </Button>
       </form>
     </Form>

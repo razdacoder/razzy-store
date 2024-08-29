@@ -11,7 +11,8 @@ export default function useCreateProduct() {
       toast.success("Product Created");
       queryClient.invalidateQueries({ queryKey: ["products"] });
     },
-    onError: () => {
+    onError: (error) => {
+      console.log(error);
       toast.error("Something went wrong!!");
     },
   });
