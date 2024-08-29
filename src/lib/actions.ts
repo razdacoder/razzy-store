@@ -16,13 +16,12 @@ export const createProduct = async (values: ProductValues) => {
     const [newProduct] = await db
       .insert(products)
       .values({
-        id,
         title,
         slug,
         description,
         price,
-        category: category.toLowerCase(),
-        images: images.join(","),
+        category,
+        images,
       })
       .returning();
     return newProduct;

@@ -98,7 +98,10 @@ export default function ProductForm() {
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
+                    <SelectValue
+                      className="capitalize"
+                      placeholder="Select a category"
+                    />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -106,6 +109,7 @@ export default function ProductForm() {
                     <SelectItem
                       key={`form-category-${category}`}
                       value={category}
+                      className="capitalize"
                     >
                       {category}
                     </SelectItem>

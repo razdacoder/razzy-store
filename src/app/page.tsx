@@ -16,7 +16,6 @@ export default async function Home() {
   await queryClient.prefetchQuery(productsQueryOptions);
   return (
     <>
-      {/* <Header /> */}
       <CategoriesPanel />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <ProductList />
