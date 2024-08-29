@@ -185,27 +185,7 @@ export default function ProductForm() {
           </div>
         </div>
 
-        {/* <UploadButton
-          className="border-2 border-dashed border-secondary text-primary ut-button:ut-readying:bg-primary/80 ut-button:ut-ready:bg-primary ut-label:text-primary"
-          endpoint="imageUploader"
-          disabled={isPending}
-          onUploadBegin={() => {
-            toast.loading("Uploading files...");
-          }}
-          onClientUploadComplete={(res) => {
-            toast.dismiss();
-            toast.success("Upload Completed");
-            const images = res.map((r) => r.url);
-            form.setValue("images", images);
-          }}
-          onUploadError={(error: Error) => {
-            // Do something with the error.
-            toast.dismiss();
-            toast.error(`ERROR! ${error.message}`);
-          }}
-        /> */}
-
-        <Button className="w-full flex items-center gap-2">
+        <Button disabled={isPending} className="w-full flex items-center gap-2">
           {isPending && <Loader className="size-4 animate-spin" />}Create
           Product
         </Button>

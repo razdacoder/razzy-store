@@ -42,7 +42,7 @@ export default function CategoriesPanel() {
           <div className="md:hidden">
             <Select>
               <SelectTrigger className="w-fit">
-                <SelectValue placeholder="Categories" />
+                <SelectValue className="capitalize" placeholder="Categories" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
@@ -50,6 +50,7 @@ export default function CategoriesPanel() {
                   <SelectItem
                     key={`select-${category}`}
                     value={category.toLowerCase()}
+                    className="capitalize"
                   >
                     {category}
                   </SelectItem>
@@ -62,7 +63,11 @@ export default function CategoriesPanel() {
               All
             </Button>
             {categories.map((category) => (
-              <Button key={`btn-${category}`} variant="link" className="px-0">
+              <Button
+                key={`btn-${category}`}
+                variant="link"
+                className="px-0 capitalize"
+              >
                 {category}
               </Button>
             ))}
