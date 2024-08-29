@@ -11,7 +11,7 @@ export const createProduct = async (values: ProductValues) => {
     productScheme.parse(values);
 
   const id = createId();
-  const slug = slugify(title);
+  const slug = slugify(title, { lower: true });
   try {
     const [newProduct] = await db
       .insert(products)

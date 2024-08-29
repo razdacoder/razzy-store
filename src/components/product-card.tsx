@@ -9,7 +9,7 @@ interface Props {
 
 export default function ProductCard({ product }: Props) {
   return (
-    <Link href={`/products/gfdggf`}>
+    <Link href={`/products/${product.slug}`}>
       <div className="relative h-[480px]">
         <Image
           src={product.images[1]}
