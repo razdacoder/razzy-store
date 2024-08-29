@@ -7,8 +7,8 @@ export interface Product {
   price: number;
   description: string;
   category: string;
-  images: string;
-  createdAt: string | null;
+  images: string[];
+  createdAt: Date | null;
 }
 
 export const productsQueryOptions = queryOptions({

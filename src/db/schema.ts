@@ -16,7 +16,7 @@ export const products = pgTable("products", {
   slug: text("slug").notNull().unique(),
   price: real("price").notNull(),
   description: text("description").notNull(),
-  category: categoryEnum("category"),
+  category: categoryEnum("category").notNull(),
   images: text("images").array().notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
