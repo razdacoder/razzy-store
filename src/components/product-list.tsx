@@ -1,11 +1,10 @@
 "use client";
-import { productsQueryOptions } from "@/lib/types";
-import { useQuery } from "@tanstack/react-query";
+import useGetProducts from "@/hooks/use-get-products";
 import { Loader } from "lucide-react";
 import ProductCard from "./product-card";
 
 export default function ProductList() {
-  const { data, isLoading, isError } = useQuery(productsQueryOptions);
+  const { data, isLoading, isError } = useGetProducts();
 
   if (isLoading) {
     <main className="py-4 mb-10">

@@ -22,3 +22,17 @@ export const productsQueryOptions = queryOptions({
     return data;
   },
 });
+
+export function getProductOptions(slug: string) {
+  return queryOptions({
+    queryKey: ["product", slug],
+    queryFn: async () => {
+      const res = await fetch(`/api/products/${slug}`);
+      if (!res.ok) {
+        throw new Error("Could not fetch products");
+      }
+      const data = (await res.json()) as Product;
+      return data;
+    },
+  });
+}
