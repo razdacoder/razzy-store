@@ -11,17 +11,25 @@ export interface Product {
   createdAt: Date | null;
 }
 
-export const productsQueryOptions = queryOptions({
-  queryKey: ["products"],
-  queryFn: async () => {
-    const res = await fetch("/api/products");
-    if (!res.ok) {
-      throw new Error("Could not fetch products");
-    }
-    const data = (await res.json()) as Product[];
-    return data;
-  },
-});
+export function getProductsOptions(category?: string) {
+  return queryOptions({
+    queryKey: ["products", category],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+
+      if (category) {
+        params.set("category", category);
+      }
+
+      const res = await fetch(`/api/products?${params.toString()}`);
+      if (!res.ok) {
+        throw new Error("Could not fetch products");
+      }
+      const data = (await res.json()) as Product[];
+      return data;
+    },
+  });
+}
 
 export function getProductOptions(slug: string) {
   return queryOptions({

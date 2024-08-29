@@ -12,6 +12,8 @@ import { categories } from "@/lib/config";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
 
+import { cn } from "@/lib/utils";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import {
   Select,
@@ -30,17 +32,38 @@ import {
 } from "./ui/sheet";
 
 export default function CategoriesPanel() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const categoryParam = searchParams.get("category");
   const [range, setRange] = useState([0, 24]);
 
   const handleRangeChange = (value: number[]) => {
     setRange(value);
+  };
+
+  const changeCategory = (category: string | undefined) => {
+    const params = new URLSearchParams(searchParams);
+    if (category) {
+      params.set("category", category);
+    } else {
+      params.delete("category");
+    }
+    router.push(`${pathname}?${params.toString()}`);
   };
   return (
     <div className="py-2 border-b">
       <div className="px-4 md:container ">
         <div className="flex justify-between items-center">
           <div className="md:hidden">
-            <Select>
+            <Select
+              onValueChange={(value) =>
+                value === "all"
+                  ? changeCategory(undefined)
+                  : changeCategory(value)
+              }
+              defaultValue={!categoryParam ? "all" : categoryParam}
+            >
               <SelectTrigger className="w-fit">
                 <SelectValue className="capitalize" placeholder="Categories" />
               </SelectTrigger>
@@ -59,14 +82,25 @@ export default function CategoriesPanel() {
             </Select>
           </div>
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="link" className="px-0">
+            <Button
+              variant="link"
+              onClick={() => changeCategory(undefined)}
+              className={cn(
+                "px-0",
+                !categoryParam && "text-destructive underline"
+              )}
+            >
               All
             </Button>
             {categories.map((category) => (
               <Button
+                onClick={() => changeCategory(category)}
                 key={`btn-${category}`}
                 variant="link"
-                className="px-0 capitalize"
+                className={cn(
+                  "px-0 capitalize",
+                  categoryParam === category && "text-destructive underline"
+                )}
               >
                 {category}
               </Button>
