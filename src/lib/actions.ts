@@ -20,7 +20,7 @@ export const createProduct = async (values: ProductValues) => {
       slug,
       description,
       price,
-      category,
+      category: category.toLowerCase(),
       images: images.join(","),
     })
     .returning();
