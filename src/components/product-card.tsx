@@ -1,22 +1,27 @@
+import { Product } from "@/lib/types";
 import { formatToNaira } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function ProductCard() {
+interface Props {
+  product: Product;
+}
+
+export default function ProductCard({ product }: Props) {
   return (
     <Link href={`/products/gfdggf`}>
       <div className="relative h-[480px]">
         <Image
-          src="/img1.jpg"
-          alt="Product Image"
+          src={product.images[0]}
+          alt={product.title}
           fill
           className="absolute object-cover"
         />
       </div>
       <div className="mt-4 space-y-2">
-        <h6 className="text-sm font-medium uppercase">Online Exclusive</h6>
+        <h6 className="text-sm font-medium uppercase">{product.title}</h6>
         <h5 className="font-medium text-sm tracking-wide">
-          {formatToNaira(40000)}
+          {formatToNaira(product.price)}
         </h5>
       </div>
     </Link>
