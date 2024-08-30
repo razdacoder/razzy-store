@@ -6,7 +6,7 @@ import ProductCard from "./product-card";
 export default function ProductList() {
   const { data, isLoading, isError } = useGetProducts();
 
-  if (isLoading) {
+  if (!data && isLoading) {
     <main className="py-4 mb-10">
       <div className="px-4 md:container flex justify-center items-center my-24">
         <Loader className="size-5 animate-spin" />
