@@ -49,8 +49,9 @@ export function getProductsOptions(
   });
 }
 
-export function getProductOptions(slug: string) {
+export function getProductOptions(slug?: string) {
   return queryOptions({
+    enabled: !!slug,
     queryKey: ["product", slug],
     queryFn: async () => {
       const res = await fetch(`/api/products/${slug}`);

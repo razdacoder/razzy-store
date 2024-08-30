@@ -15,12 +15,14 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import useDeleteProduct from "@/hooks/use-delete-product";
+import { useEditProduct } from "@/hooks/use-edit-product";
 import { formatToNaira } from "@/lib/utils";
 import { Edit, LogIn, Shield, ShoppingBag, Store, Trash } from "lucide-react";
 
 export default function ProductPageClient({ slug }: { slug: string }) {
   const { data, isLoading, isError } = useGetProduct({ slug });
   const { deleteProductFn, isPending } = useDeleteProduct();
+  const { onOpen } = useEditProduct();
 
   if (isLoading) {
     <div className="flex justify-center items-center my-20">
@@ -115,7 +117,11 @@ export default function ProductPageClient({ slug }: { slug: string }) {
             </p>
           </div>
           <div className="my-8 flex items-center gap-4">
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button
+              onClick={() => onOpen(data.slug)}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
               <Edit className="size-4" />
               Edit Product
             </Button>

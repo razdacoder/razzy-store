@@ -1,5 +1,6 @@
 "use client";
 import { useMountedState } from "react-use";
+import EditProductSheet from "./ediit-product-sheet";
 import NewProductSheet from "./new-product-sheet";
 
 export default function SheetProvider() {
@@ -9,6 +10,7 @@ export default function SheetProvider() {
   return (
     <>
       <NewProductSheet />
+      <EditProductSheet />
     </>
   );
 }

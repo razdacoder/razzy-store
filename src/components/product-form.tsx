@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 
 import useCreateProduct from "@/hooks/use-create-product";
 import { useNewProduct } from "@/hooks/use-new-product";
+import { Product } from "@/lib/types";
 import { uploadFiles } from "@/lib/uploadthing";
 import { Loader, Upload } from "lucide-react";
 import Image from "next/image";
@@ -30,20 +31,33 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 
-export default function ProductForm() {
+interface ProductFormProps {
+  product?: Product;
+}
+
+export default function ProductForm({ product }: ProductFormProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [isPending, startTransition] = useTransition();
   const { onClose } = useNewProduct();
   const router = useRouter();
+  const isEditMode = !!product;
+
   const form = useForm<ProductValues>({
     resolver: zodResolver(productScheme),
-    defaultValues: {
-      title: "",
-      description: "",
-      category: "",
-      images: [],
-      price: 0,
-    },
+    defaultValues: isEditMode
+      ? {
+          title: product.title,
+          category: product.category,
+          description: product.description,
+          price: product.price,
+        }
+      : {
+          title: "",
+          description: "",
+          category: "",
+          images: [],
+          price: 0,
+        },
   });
 
   const { mutate } = useCreateProduct();
@@ -186,8 +200,8 @@ export default function ProductForm() {
         </div>
 
         <Button disabled={isPending} className="w-full flex items-center gap-2">
-          {isPending && <Loader className="size-4 animate-spin" />}Create
-          Product
+          {isPending && <Loader className="size-4 animate-spin" />}{" "}
+          {isEditMode ? "Edit Product" : "Create Product"}
         </Button>
       </form>
     </Form>
