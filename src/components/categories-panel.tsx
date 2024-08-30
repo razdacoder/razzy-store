@@ -62,13 +62,13 @@ export default function CategoriesPanel() {
 
   const handleApplyFilter = () => {
     const params = new URLSearchParams(searchParams);
-    if (filters.category) {
+    if (filters.category && filters.category !== "all") {
       params.set("category", filters.category);
     } else {
       params.delete("category");
     }
 
-    if (filters.sort) {
+    if (filters.sort && filters.sort !== "newset") {
       params.set("sort", filters.sort);
     } else {
       params.delete("sort");
