@@ -29,7 +29,25 @@ export const metadata: Metadata = {
     template: "%s | Razzy Store",
     default: "Razzy Store",
   },
-  description: "The social media app for devs to connect.",
+  description:
+    "Explore vibrant African fashion with our unique collection of traditional and modern designs. Shop authentic Ankara, Kaftans, and more, celebrating culture with quality craftsmanship.",
+  keywords: [
+    "African fashion",
+    "Agbada clothing",
+    "Suits",
+    "Kaftans",
+    "Traditional African wear",
+    "Modern African designs",
+    "Authentic African clothing",
+    "Cultural fashion",
+    "African prints",
+    "African style",
+    "Quality craftsmanship",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
