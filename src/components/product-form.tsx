@@ -11,7 +11,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import useCreateProduct from "@/hooks/use-create-product";
+import { useEditProduct } from "@/hooks/use-edit-product";
 import { useNewProduct } from "@/hooks/use-new-product";
+import useUpdateProduct from "@/hooks/use-update-product";
 import { Product } from "@/lib/types";
 import { uploadFiles } from "@/lib/uploadthing";
 import { Loader, Upload } from "lucide-react";
@@ -39,6 +41,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [isPending, startTransition] = useTransition();
   const { onClose } = useNewProduct();
+  const { onClose: closeEdit } = useEditProduct();
   const router = useRouter();
   const isEditMode = !!product;
 
@@ -50,6 +53,7 @@ export default function ProductForm({ product }: ProductFormProps) {
           category: product.category,
           description: product.description,
           price: product.price,
+          images: product.images,
         }
       : {
           title: "",
@@ -61,27 +65,38 @@ export default function ProductForm({ product }: ProductFormProps) {
   });
 
   const { mutate } = useCreateProduct();
+  const { updateProductFn } = useUpdateProduct({ slug: product?.slug });
 
   function onSubmit(values: ProductValues) {
-    startTransition(async () => {
-      if (files.length > 0) {
-        const res = await uploadFiles("imageUploader", {
-          files,
+    if (isEditMode) {
+      startTransition(async () => {
+        updateProductFn(values, {
+          onSuccess: () => {
+            closeEdit();
+          },
         });
-        const images = res.map((r) => r.url);
-        mutate(
-          { ...values, images: images },
-          {
-            onSuccess: () => {
-              onClose();
-              form.reset();
-              setFiles([]);
-              router.push("/");
-            },
-          }
-        );
-      }
-    });
+      });
+    } else {
+      startTransition(async () => {
+        if (files.length > 0) {
+          const res = await uploadFiles("imageUploader", {
+            files,
+          });
+          const images = res.map((r) => r.url);
+          mutate(
+            { ...values, images: images },
+            {
+              onSuccess: () => {
+                onClose();
+                form.reset();
+                setFiles([]);
+                router.push("/");
+              },
+            }
+          );
+        }
+      });
+    }
   }
   return (
     <Form {...form}>
@@ -160,44 +175,46 @@ export default function ProductForm({ product }: ProductFormProps) {
             </FormItem>
           )}
         />
-        <div className="space-y-2">
-          <Label>Images</Label>
-          <div className="grid grid-cols-3 gap-2">
-            {files.map((file) => {
-              const imageUrl = URL.createObjectURL(file);
-              return (
-                <Image
-                  key={file.name}
-                  src={imageUrl}
-                  alt="Upload File"
-                  className="aspect-square w-full rounded-md object-cover"
-                  height="300"
-                  width="300"
-                />
-              );
-            })}
-            {files.length < 3 && (
-              <div>
-                <input
-                  className="hidden"
-                  onChange={(e) =>
-                    setFiles((files) => [...files, e.target.files![0]])
-                  }
-                  id="image"
-                  type="file"
-                  accept="image/*"
-                />
-                <label
-                  htmlFor="image"
-                  className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer"
-                >
-                  <Upload className="h-4 w-4 text-muted-foreground" />
-                  <span className="sr-only">Upload</span>
-                </label>
-              </div>
-            )}
+        {!isEditMode && (
+          <div className="space-y-2">
+            <Label>Images</Label>
+            <div className="grid grid-cols-3 gap-2">
+              {files.map((file) => {
+                const imageUrl = URL.createObjectURL(file);
+                return (
+                  <Image
+                    key={file.name}
+                    src={imageUrl}
+                    alt="Upload File"
+                    className="aspect-square w-full rounded-md object-cover"
+                    height="300"
+                    width="300"
+                  />
+                );
+              })}
+              {files.length < 3 && (
+                <div>
+                  <input
+                    className="hidden"
+                    onChange={(e) =>
+                      setFiles((files) => [...files, e.target.files![0]])
+                    }
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                  />
+                  <label
+                    htmlFor="image"
+                    className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer"
+                  >
+                    <Upload className="h-4 w-4 text-muted-foreground" />
+                    <span className="sr-only">Upload</span>
+                  </label>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         <Button disabled={isPending} className="w-full flex items-center gap-2">
           {isPending && <Loader className="size-4 animate-spin" />}{" "}

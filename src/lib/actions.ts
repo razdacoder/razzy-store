@@ -34,7 +34,7 @@ export const deleteProduct = async (id: string) => {
 };
 
 export const updateProduct = async (
-  id: string,
+  slug: string,
   updateValues: ProductValues
 ) => {
   const { title, description, price, category } =
@@ -43,7 +43,7 @@ export const updateProduct = async (
     const [data] = await db
       .update(products)
       .set({ title, description, price, category })
-      .where(eq(products.id, id))
+      .where(eq(products.slug, slug))
       .returning();
     return data;
   } catch (error) {
