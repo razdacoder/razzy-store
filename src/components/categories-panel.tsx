@@ -84,6 +84,15 @@ export default function CategoriesPanel() {
     setOpen(false);
   };
 
+  const resetFilters = () => {
+    const params = new URLSearchParams(searchParams);
+    params.delete("category");
+    params.delete("sort");
+    params.delete("price");
+    router.push(`${pathname}`);
+    setOpen(false);
+  };
+
   return (
     <div className="py-2 border-b">
       <div className="px-4 md:container ">
@@ -266,8 +275,13 @@ export default function CategoriesPanel() {
                   </AccordionItem>
                 </Accordion>
                 <SheetFooter className="flex items-center gap-2 mt-10 justify-start">
-                  <Button variant="outline" size="lg" className="w-full">
-                    RESST
+                  <Button
+                    onClick={resetFilters}
+                    variant="outline"
+                    size="lg"
+                    className="w-full"
+                  >
+                    RESET
                   </Button>
                   <Button
                     onClick={handleApplyFilter}
