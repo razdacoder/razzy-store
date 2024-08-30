@@ -5,7 +5,12 @@ export default function SizeGuides() {
   return (
     <div className="flex gap-3 items-center">
       {sizes.map((size) => (
-        <Button variant="outline" size="icon" className="border-2 border-black">
+        <Button
+          key={size}
+          variant="outline"
+          size="icon"
+          className="border-2 border-black"
+        >
           {size}
         </Button>
       ))}

@@ -9,6 +9,7 @@ export default function ImageCarousel({ images }: { images: string[] }) {
       <div className="flex flex-row lg:flex-col lg:flex-wrap gap-4">
         {images.map((image, index) => (
           <Image
+            key={image}
             src={image}
             alt="Product Image"
             width={100}
