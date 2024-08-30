@@ -14,10 +14,20 @@ export const metadata: Metadata = {
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { category: string | undefined };
+  searchParams: {
+    category: string | undefined;
+    sort: string | undefined;
+    price: string | undefined;
+  };
 }) {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(getProductsOptions(searchParams.category));
+  await queryClient.prefetchQuery(
+    getProductsOptions(
+      searchParams.category,
+      searchParams.sort,
+      searchParams.price
+    )
+  );
   return (
     <>
       <CategoriesPanel />

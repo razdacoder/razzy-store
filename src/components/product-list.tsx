@@ -24,7 +24,7 @@ export default function ProductList() {
     </main>;
   }
 
-  if (!data || data.length === 0) {
+  if (data && data.length === 0) {
     return (
       <main className="py-4 mb-10">
         <div className="px-4 md:container flex justify-center items-center my-24">

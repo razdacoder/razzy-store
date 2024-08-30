@@ -11,14 +11,32 @@ export interface Product {
   createdAt: Date | null;
 }
 
-export function getProductsOptions(category?: string) {
+export function getProductsOptions(
+  category?: string,
+  sort?: string,
+  price?: string
+) {
   return queryOptions({
-    queryKey: ["products", category],
+    queryKey: ["products", category, sort, price],
     queryFn: async () => {
       const params = new URLSearchParams();
 
       if (category) {
         params.set("category", category);
+      } else {
+        params.delete("category");
+      }
+
+      if (sort) {
+        params.set("sort", sort);
+      } else {
+        params.delete("sort");
+      }
+
+      if (price) {
+        params.set("price", price);
+      } else {
+        params.delete("price");
       }
 
       const res = await fetch(`/api/products?${params.toString()}`);
