@@ -68,37 +68,50 @@ export default function ProductForm({ product }: ProductFormProps) {
   const { mutate } = useCreateProduct();
   const { updateProductFn } = useUpdateProduct({ slug: product?.slug });
 
-  function onSubmit(values: ProductValues) {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFiles((prevFiles) => [...prevFiles, e.target.files![0]]);
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveImage = (image: string) => {
+    const currentImages = form.getValues("images");
+    form.setValue(
+      "images",
+      currentImages.filter((i) => i !== image),
+      {
+        shouldDirty: true,
+      }
+    );
+    form.trigger("images");
+  };
+
+  const onSubmit = async (values: ProductValues) => {
     if (isEditMode) {
       startTransition(async () => {
-        let res: ClientUploadedFileData<{
-          uploadedBy: string;
-        }>[] = [];
+        let res: ClientUploadedFileData<{ uploadedBy: string }>[] = [];
         if (files.length > 0) {
-          const uploadRes = await uploadFiles("imageUploader", {
-            files,
-          });
-          res = uploadRes;
+          res = await uploadFiles("imageUploader", { files });
         }
         const newImages = res.map((r) => r.url);
         updateProductFn(
           { ...values, images: [...values.images, ...newImages] },
           {
-            onSuccess: () => {
-              closeEdit();
-            },
+            onSuccess: () => closeEdit(),
           }
         );
       });
     } else {
       startTransition(async () => {
         if (files.length > 0) {
-          const res = await uploadFiles("imageUploader", {
-            files,
-          });
+          const res = await uploadFiles("imageUploader", { files });
           const images = res.map((r) => r.url);
           mutate(
-            { ...values, images: images },
+            { ...values, images },
             {
               onSuccess: () => {
                 onClose();
@@ -111,7 +124,70 @@ export default function ProductForm({ product }: ProductFormProps) {
         }
       });
     }
-  }
+  };
+
+  const renderImagePreview = (image: string) => (
+    <div className="relative" key={image}>
+      <Image
+        src={image}
+        alt="Uploaded Image"
+        className="aspect-square w-full rounded-md object-cover"
+        height="300"
+        width="300"
+      />
+      <Button
+        type="button"
+        onClick={() => handleRemoveImage(image)}
+        size="icon"
+        className="rounded-full absolute right-1 top-1 size-6"
+      >
+        <X className="size-4" />
+      </Button>
+    </div>
+  );
+
+  const renderFilePreview = (file: File, index: number) => {
+    const imageUrl = URL.createObjectURL(file);
+    return (
+      <div className="relative" key={file.name}>
+        <Image
+          src={imageUrl}
+          alt="Uploaded File"
+          className="aspect-square w-full rounded-md object-cover"
+          height="300"
+          width="300"
+        />
+        <Button
+          type="button"
+          onClick={() => handleRemoveFile(index)}
+          size="icon"
+          className="rounded-full absolute right-1 top-1 size-6"
+        >
+          <X className="size-4" />
+        </Button>
+      </div>
+    );
+  };
+
+  const renderUploadInput = () => (
+    <div>
+      <input
+        className="hidden"
+        onChange={handleFileChange}
+        id="image"
+        type="file"
+        accept="image/*"
+      />
+      <label
+        htmlFor="image"
+        className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer"
+      >
+        <Upload className="h-4 w-4 text-muted-foreground" />
+        <span className="sr-only">Upload</span>
+      </label>
+    </div>
+  );
+
   return (
     <Form {...form}>
       <form className="space-y-6 mt-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -127,10 +203,10 @@ export default function ProductForm({ product }: ProductFormProps) {
               <FormMessage />
             </FormItem>
           )}
-        />
+        ></FormField>
         <FormField
-          control={form.control}
           name="category"
+          control={form.control}
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
@@ -163,6 +239,7 @@ export default function ProductForm({ product }: ProductFormProps) {
             </FormItem>
           )}
         />
+
         <FormField
           name="price"
           control={form.control}
@@ -189,148 +266,17 @@ export default function ProductForm({ product }: ProductFormProps) {
             </FormItem>
           )}
         />
-        {isEditMode ? (
-          <div className="space-y-2">
-            <Label>Images</Label>
-            <div className="grid grid-cols-3 gap-2">
-              {form.getValues("images").map((image) => (
-                <div className="relative">
-                  <Image
-                    key={image}
-                    src={image}
-                    alt={product.title}
-                    className="aspect-square w-full rounded-md object-cover"
-                    height="300"
-                    width="300"
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      const currentImages = form.getValues("images");
-                      const newImages = currentImages.filter(
-                        (i) => image !== i
-                      );
-                      form.setValue("images", newImages, { shouldDirty: true });
-                      form.trigger("images");
-                    }}
-                    size="icon"
-                    className="rounded-full absolute right-1 top-1 size-6"
-                  >
-                    <X className="size-4" />
-                  </Button>
-                </div>
-              ))}
-              {files.map((file, index) => {
-                const imageUrl = URL.createObjectURL(file);
-                return (
-                  <div className="relative">
-                    <Image
-                      key={file.name}
-                      src={imageUrl}
-                      alt="Upload File"
-                      className="aspect-square w-full rounded-md object-cover"
-                      height="300"
-                      width="300"
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        const newFiles = [...files];
-                        const newImages = newFiles.filter(
-                          (filex, i) => index !== i
-                        );
-                        setFiles(newImages);
-                      }}
-                      size="icon"
-                      className="rounded-full absolute right-1 top-1 size-6"
-                    >
-                      <X className="size-4" />
-                    </Button>
-                  </div>
-                );
-              })}
-
-              {form.getValues("images").length + files.length < 3 && (
-                <div>
-                  <input
-                    className="hidden"
-                    onChange={(e) =>
-                      setFiles((files) => [...files, e.target.files![0]])
-                    }
-                    id="image"
-                    type="file"
-                    accept="image/*"
-                  />
-                  <label
-                    htmlFor="image"
-                    className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer"
-                  >
-                    <Upload className="h-4 w-4 text-muted-foreground" />
-                    <span className="sr-only">Upload</span>
-                  </label>
-                </div>
-              )}
-            </div>
+        <div className="space-y-2">
+          <Label>Images</Label>
+          <div className="grid grid-cols-3 gap-2">
+            {isEditMode && form.getValues("images").map(renderImagePreview)}
+            {files.map((file, index) => renderFilePreview(file, index))}
+            {form.getValues("images").length + files.length < 3 &&
+              renderUploadInput()}
           </div>
-        ) : (
-          <div className="space-y-2">
-            <Label>Images</Label>
-            <div className="grid grid-cols-3 gap-2">
-              {files.map((file, index) => {
-                const imageUrl = URL.createObjectURL(file);
-                return (
-                  <div className="relative">
-                    <Image
-                      key={file.name}
-                      src={imageUrl}
-                      alt="Upload File"
-                      className="aspect-square w-full rounded-md object-cover"
-                      height="300"
-                      width="300"
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        const newFiles = [...files];
-                        const newImages = newFiles.filter(
-                          (filex, i) => index !== i
-                        );
-                        setFiles(newImages);
-                      }}
-                      size="icon"
-                      className="rounded-full absolute right-1 top-1 size-6"
-                    >
-                      <X className="size-4" />
-                    </Button>
-                  </div>
-                );
-              })}
-              {files.length < 3 && (
-                <div>
-                  <input
-                    className="hidden"
-                    onChange={(e) =>
-                      setFiles((files) => [...files, e.target.files![0]])
-                    }
-                    id="image"
-                    type="file"
-                    accept="image/*"
-                  />
-                  <label
-                    htmlFor="image"
-                    className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer"
-                  >
-                    <Upload className="h-4 w-4 text-muted-foreground" />
-                    <span className="sr-only">Upload</span>
-                  </label>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
+        </div>
         <Button disabled={isPending} className="w-full flex items-center gap-2">
-          {isPending && <Loader className="size-4 animate-spin" />}{" "}
+          {isPending && <Loader className="size-4 animate-spin" />}
           {isEditMode ? "Edit Product" : "Create Product"}
         </Button>
       </form>
