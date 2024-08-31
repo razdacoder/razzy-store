@@ -1,8 +1,7 @@
 "use client";
 import { useMountedState } from "react-use";
-import NewProductSheet from "./new-product-sheet";
-import EditProductSheet from./ products / new - product - sheetroduct - sheet;
-";
+import EditProductSheet from "./products/ediit-product-sheet";
+import NewProductSheet from "./products/new-product-sheet";
 
 export default function SheetProvider() {
   const isMounted = useMountedState();
