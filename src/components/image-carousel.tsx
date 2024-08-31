@@ -6,7 +6,7 @@ export default function ImageCarousel({ images }: { images: string[] }) {
   const [activeImg, setActiveImg] = useState(0);
   return (
     <div className="flex gap-4 flex-col-reverse lg:flex-row">
-      <div className="flex flex-row lg:flex-col lg:flex-wrap gap-4">
+      <div className="flex flex-row justify-between lg:flex-col lg:flex-wrap gap-4">
         {images.map((image, index) => (
           <Image
             key={image}
@@ -16,7 +16,7 @@ export default function ImageCarousel({ images }: { images: string[] }) {
             height={100}
             className={cn(
               "transition-all",
-              activeImg === index && "border-2 p-1 border-black"
+              activeImg === index && "border-2 p-1 border-black w-[120px]"
             )}
             onClick={() => setActiveImg(index)}
           />
