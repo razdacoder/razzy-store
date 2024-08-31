@@ -25,23 +25,29 @@ export default function ProductPageClient({ slug }: { slug: string }) {
   const { onOpen } = useEditProduct();
 
   if (isLoading) {
-    <div className="flex justify-center items-center my-20">
-      <Loader className="size-5 animate-spin" />
-    </div>;
+    return (
+      <div className="flex justify-center items-center my-20">
+        <Loader className="size-5 animate-spin" />
+      </div>
+    );
   }
 
   if (isError) {
-    <div className="flex justify-center items-center my-20">
-      <p className="text-sm font-medium text-destructive">
-        Failed to fetch product
-      </p>
-    </div>;
+    return (
+      <div className="flex justify-center items-center my-20">
+        <p className="text-sm font-medium text-destructive">
+          Failed to fetch product
+        </p>
+      </div>
+    );
   }
 
   if (!data) {
-    <div className="flex justify-center items-center my-20">
-      <p className="text-sm font-medium">Product not found</p>
-    </div>;
+    return (
+      <div className="flex justify-center items-center my-20">
+        <p className="text-sm font-medium">Product not found</p>
+      </div>
+    );
   }
 
   if (data)
