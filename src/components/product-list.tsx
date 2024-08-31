@@ -7,7 +7,7 @@ export default function ProductList() {
   const { data, isLoading, isError } = useGetProducts();
 
   if (!data && isLoading) {
-    <main className="py-4 mb-10">
+    <main className="py-4 my-10">
       <div className="px-4 md:container flex justify-center items-center my-24">
         <Loader className="size-5 animate-spin" />
       </div>
@@ -15,7 +15,7 @@ export default function ProductList() {
   }
 
   if (isError) {
-    <main className="py-4 mb-10">
+    <main className="py-4 my-10">
       <div className="px-4 md:container flex justify-center items-center my-24">
         <p className="text-sm font-medium text-destructive">
           Failed to fetch products
@@ -26,7 +26,7 @@ export default function ProductList() {
 
   if (data && data.length === 0) {
     return (
-      <main className="py-4 mb-10">
+      <main className="py-4 my-10">
         <div className="px-4 md:container flex justify-center items-center my-24">
           <p className="text-sm font-medium">
             No products to show at this time.
@@ -37,7 +37,7 @@ export default function ProductList() {
   }
   if (data)
     return (
-      <main className="py-4 mb-10">
+      <main className="py-4 my-10">
         <div className="px-4 md:container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
           {data?.map((product) => (
             <ProductCard key={product.id} product={product} />

@@ -106,7 +106,7 @@ export default function CategoriesPanel() {
               }
               defaultValue={!categoryParam ? "all" : categoryParam}
             >
-              <SelectTrigger className="w-fit">
+              <SelectTrigger className="w-56">
                 <SelectValue className="capitalize" placeholder="Categories" />
               </SelectTrigger>
               <SelectContent>
