@@ -4,7 +4,8 @@ import SizeGuides from "@/components/size-giudes";
 import useGetProduct from "@/hooks/use-get-product";
 import { Loader } from "lucide-react";
 
-import ImageCarousel from "@/components/image-carousel";
+import Loading from "@/components/loader";
+import ImageCarousel from "@/components/products/image-carousel";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -25,11 +26,7 @@ export default function ProductPageClient({ slug }: { slug: string }) {
   const { onOpen } = useEditProduct();
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center my-20">
-        <Loader className="size-5 animate-spin" />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (isError) {

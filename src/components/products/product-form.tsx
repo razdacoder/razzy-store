@@ -20,7 +20,7 @@ import { Loader, Upload } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -28,10 +28,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 
 interface ProductFormProps {
   product?: Product;

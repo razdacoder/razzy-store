@@ -1,14 +1,14 @@
 import { useEditProduct } from "@/hooks/use-edit-product";
 import useGetProduct from "@/hooks/use-get-product";
 import { Loader } from "lucide-react";
-import ProductForm from "./product-form";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "./ui/sheet";
+} from "../ui/sheet";
+import ProductForm from "./product-form";
 
 export default function EditProductSheet() {
   const { slug, isOpen, onClose } = useEditProduct();

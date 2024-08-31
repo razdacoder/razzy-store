@@ -1,12 +1,12 @@
 import { useNewProduct } from "@/hooks/use-new-product";
-import ProductForm from "./product-form";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "./ui/sheet";
+} from "../ui/sheet";
+import ProductForm from "./product-form";
 
 export default function NewProductSheet() {
   const { isOpen, onClose } = useNewProduct();

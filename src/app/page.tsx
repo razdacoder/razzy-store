@@ -1,5 +1,5 @@
 import CategoriesPanel from "@/components/categories-panel";
-import ProductList from "@/components/product-list";
+import ProductList from "@/components/products/product-list";
 import { getProductsOptions } from "@/lib/types";
 import {
   dehydrate,
@@ -24,6 +24,7 @@ export default async function Home({
       searchParams.price
     )
   );
+
   return (
     <>
       <CategoriesPanel />
