@@ -16,10 +16,11 @@ import { useNewProduct } from "@/hooks/use-new-product";
 import useUpdateProduct from "@/hooks/use-update-product";
 import { Product } from "@/lib/types";
 import { uploadFiles } from "@/lib/uploadthing";
-import { Loader, Upload } from "lucide-react";
+import { Loader, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { ClientUploadedFileData } from "uploadthing/types";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -70,11 +71,24 @@ export default function ProductForm({ product }: ProductFormProps) {
   function onSubmit(values: ProductValues) {
     if (isEditMode) {
       startTransition(async () => {
-        updateProductFn(values, {
-          onSuccess: () => {
-            closeEdit();
-          },
-        });
+        let res: ClientUploadedFileData<{
+          uploadedBy: string;
+        }>[] = [];
+        if (files.length > 0) {
+          const uploadRes = await uploadFiles("imageUploader", {
+            files,
+          });
+          res = uploadRes;
+        }
+        const newImages = res.map((r) => r.url);
+        updateProductFn(
+          { ...values, images: [...values.images, ...newImages] },
+          {
+            onSuccess: () => {
+              closeEdit();
+            },
+          }
+        );
       });
     } else {
       startTransition(async () => {
@@ -175,21 +189,120 @@ export default function ProductForm({ product }: ProductFormProps) {
             </FormItem>
           )}
         />
-        {!isEditMode && (
+        {isEditMode ? (
           <div className="space-y-2">
             <Label>Images</Label>
             <div className="grid grid-cols-3 gap-2">
-              {files.map((file) => {
-                const imageUrl = URL.createObjectURL(file);
-                return (
+              {form.getValues("images").map((image) => (
+                <div className="relative">
                   <Image
-                    key={file.name}
-                    src={imageUrl}
-                    alt="Upload File"
+                    key={image}
+                    src={image}
+                    alt={product.title}
                     className="aspect-square w-full rounded-md object-cover"
                     height="300"
                     width="300"
                   />
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      const currentImages = form.getValues("images");
+                      const newImages = currentImages.filter(
+                        (i) => image !== i
+                      );
+                      form.setValue("images", newImages, { shouldDirty: true });
+                      form.trigger("images");
+                    }}
+                    size="icon"
+                    className="rounded-full absolute right-1 top-1 size-6"
+                  >
+                    <X className="size-4" />
+                  </Button>
+                </div>
+              ))}
+              {files.map((file, index) => {
+                const imageUrl = URL.createObjectURL(file);
+                return (
+                  <div className="relative">
+                    <Image
+                      key={file.name}
+                      src={imageUrl}
+                      alt="Upload File"
+                      className="aspect-square w-full rounded-md object-cover"
+                      height="300"
+                      width="300"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        const newFiles = [...files];
+                        const newImages = newFiles.filter(
+                          (filex, i) => index !== i
+                        );
+                        setFiles(newImages);
+                      }}
+                      size="icon"
+                      className="rounded-full absolute right-1 top-1 size-6"
+                    >
+                      <X className="size-4" />
+                    </Button>
+                  </div>
+                );
+              })}
+
+              {form.getValues("images").length + files.length < 3 && (
+                <div>
+                  <input
+                    className="hidden"
+                    onChange={(e) =>
+                      setFiles((files) => [...files, e.target.files![0]])
+                    }
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                  />
+                  <label
+                    htmlFor="image"
+                    className="flex aspect-square w-full items-center justify-center rounded-md border border-dashed cursor-pointer"
+                  >
+                    <Upload className="h-4 w-4 text-muted-foreground" />
+                    <span className="sr-only">Upload</span>
+                  </label>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <Label>Images</Label>
+            <div className="grid grid-cols-3 gap-2">
+              {files.map((file, index) => {
+                const imageUrl = URL.createObjectURL(file);
+                return (
+                  <div className="relative">
+                    <Image
+                      key={file.name}
+                      src={imageUrl}
+                      alt="Upload File"
+                      className="aspect-square w-full rounded-md object-cover"
+                      height="300"
+                      width="300"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        const newFiles = [...files];
+                        const newImages = newFiles.filter(
+                          (filex, i) => index !== i
+                        );
+                        setFiles(newImages);
+                      }}
+                      size="icon"
+                      className="rounded-full absolute right-1 top-1 size-6"
+                    >
+                      <X className="size-4" />
+                    </Button>
+                  </div>
                 );
               })}
               {files.length < 3 && (

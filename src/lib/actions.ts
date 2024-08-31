@@ -37,12 +37,12 @@ export const updateProduct = async (
   slug: string,
   updateValues: ProductValues
 ) => {
-  const { title, description, price, category } =
+  const { title, description, price, category, images } =
     productScheme.parse(updateValues);
   try {
     const [data] = await db
       .update(products)
-      .set({ title, description, price, category })
+      .set({ title, description, price, category, images })
       .where(eq(products.slug, slug))
       .returning();
     return data;
