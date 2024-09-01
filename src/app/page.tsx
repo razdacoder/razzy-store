@@ -17,7 +17,7 @@ export default async function Home({
   };
 }) {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(
+  await queryClient.prefetchInfiniteQuery(
     getProductsOptions(
       searchParams.category,
       searchParams.sort,

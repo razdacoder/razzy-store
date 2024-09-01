@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 export interface Product {
   id: string;
@@ -16,9 +16,9 @@ export function getProductsOptions(
   sort?: string,
   price?: string
 ) {
-  return queryOptions({
+  return infiniteQueryOptions({
     queryKey: ["products", category, sort, price],
-    queryFn: async () => {
+    queryFn: async ({ pageParam = 1 }) => {
       const params = new URLSearchParams();
 
       if (category) {
@@ -38,6 +38,8 @@ export function getProductsOptions(
       } else {
         params.delete("price");
       }
+      params.set("page", pageParam.toString());
+      params.set("limit", "10"); // Adjust the limit as needed
 
       const res = await fetch(`/api/products?${params.toString()}`);
       if (!res.ok) {
@@ -45,6 +47,11 @@ export function getProductsOptions(
       }
       const data = (await res.json()) as Product[];
       return data;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length === 0) return undefined; // Stop fetching if no more data
+      return allPages.length + 1; // Return next page number
     },
   });
 }

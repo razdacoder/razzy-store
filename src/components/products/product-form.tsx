@@ -149,7 +149,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   const renderFilePreview = (file: File, index: number) => {
     const imageUrl = URL.createObjectURL(file);
     return (
-      <div className="relative" key={file.name}>
+      <div className="relative" key={`${file.name}-${index}`}>
         <Image
           src={imageUrl}
           alt="Uploaded File"

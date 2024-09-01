@@ -8,6 +8,8 @@ export async function GET(request: NextRequest) {
   const category = searchParams.get("category");
   const sort = searchParams.get("sort") || "createdAt";
   const price = searchParams.get("price");
+  const page = parseInt(searchParams.get("page") || "1");
+  const limit = parseInt(searchParams.get("limit") || "10");
 
   const sortOptions = {
     "price-l-h": asc(products.price),
@@ -32,6 +34,9 @@ export async function GET(request: NextRequest) {
   if (price) {
     query.where(lte(products.price, Number(price)));
   }
+
+  const offset = (page - 1) * limit;
+  query.limit(limit).offset(offset);
 
   const data = await query;
   return Response.json(data);
