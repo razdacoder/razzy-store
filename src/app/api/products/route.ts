@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const sort = searchParams.get("sort") || "createdAt";
   const price = searchParams.get("price");
   const page = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "10");
+  const limit = parseInt(searchParams.get("limit") || "12");
 
   const sortOptions = {
     "price-l-h": asc(products.price),

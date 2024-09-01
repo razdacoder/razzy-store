@@ -39,7 +39,7 @@ export function getProductsOptions(
         params.delete("price");
       }
       params.set("page", pageParam.toString());
-      params.set("limit", "10"); // Adjust the limit as needed
+      params.set("limit", "12");
 
       const res = await fetch(`/api/products?${params.toString()}`);
       if (!res.ok) {
